@@ -5,7 +5,7 @@ APP_MODULE := .app.main:app
 
 .PHONY: build docker-test docker-lint docker-shell docker-run clean
 # 👷 DEFAULT: Ejecuta todo (build, test, lint, format check)
-all: build docker-test
+all: build docker-test docker-lint
 	@echo "✅ Build + Test + Lint finalizados correctamente"
 
 ## 🔨 Construye la imagen local
@@ -16,13 +16,13 @@ build:
 docker-test: build
 	docker run --rm $(IMAGE_NAME):latest pytest tests
 
-## 🧹 Ejecuta ruff dentro del contenedor
-#docker-lint: build
-#	docker run --rm $(IMAGE_NAME) ruff check .
-#
+## 🧹 Ejecuta flake8 dentro del contenedor
+docker-lint: build
+	docker run --rm $(IMAGE_NAME):latest flake8 app/
+
 ## 🧹 Corrige errores de formato (autoformat)
 #docker-format: build
-#	docker run --rm $(IMAGE_NAME) ruff check . --fix
+#	docker run --rm $(IMAGE_NAME):latest flake8 . --fix
 
 ## 🧹 Limpia todo
 clean:
