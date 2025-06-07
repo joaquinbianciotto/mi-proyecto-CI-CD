@@ -37,11 +37,11 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY"
-        docker build -t "$IMAGE_URI:$COMMIT_HASH" .
-        docker tag "$IMAGE_URI:$COMMIT_HASH" "$IMAGE_URI:latest"
+        docker build -t "$IMAGE_URI:$IMAGE.TAG" .
+        docker tag "$IMAGE_URI:$IMAGE.TAG" "$IMAGE_URI:latest"
 
-        echo "Pushing image $IMAGE_URI:$COMMIT_HASH"
-        docker push "$IMAGE_URI:$COMMIT_HASH"
+        echo "Pushing image $IMAGE_URI:$IMAGE.TAG"
+        docker push "$IMAGE_URI:$IMAGE.TAG"
 
         echo "Pushing image $IMAGE_URI:latest"
         docker push "$IMAGE_URI:latest"
