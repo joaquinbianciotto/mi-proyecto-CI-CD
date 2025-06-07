@@ -36,29 +36,20 @@ jobs:
         ECR_REPOSITORY: ${{ secrets.ECR_PUBLIC_REPOSITORY_URI }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        # Construir imagen
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        
-        # Añadir tag 'latest'
-        docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        
-        # Subir ambas imágenes a ECR
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        
+        IMAGE_URI="$ECR_REGISTRY/$ECR_REPOSITORY"
+        docker build -t "$IMAGE_URI:$COMMIT_HASH" .
+        docker tag "$IMAGE_URI:$COMMIT_HASH" "$IMAGE_URI:latest"
+
+        echo "Pushing image $IMAGE_URI:$COMMIT_HASH"
+        docker push "$IMAGE_URI:$COMMIT_HASH"
+
+        echo "Pushing image $IMAGE_URI:latest"
+        docker push "$IMAGE_URI:latest"
+
         # Guardar URI de la imagen para la notificación
         echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
-        echo "image_uri=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        echo "image_uri=IMAGE_URI" >> $GITHUB_OUTPUT
         
-    - name: Set deployment status
-      id: deploy_status
-      if: always()
-      run: |
-        if [ "${{ steps.build_push.outcome }}" == "success" ] && [ "${{ steps.verify_image.outcome }}" == "success" ]; then
-          echo "status=success" >> $GITHUB_OUTPUT
-        else
-          echo "status=failure" >> $GITHUB_OUTPUT
-        fi
 
   slackNotification:
     name: Slack Notification
