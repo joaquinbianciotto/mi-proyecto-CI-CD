@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from typing import List, Dict, Optional
+from typing import List, Optional
 from pydantic import BaseModel
 
 router = APIRouter(
@@ -15,6 +15,7 @@ class Item(BaseModel):
     description: Optional[str] = None
     price: float
     is_offer: Optional[bool] = None
+
 
 # Base de datos simulada
 items_db = {
