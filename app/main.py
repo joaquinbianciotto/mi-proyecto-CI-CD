@@ -14,4 +14,4 @@ async def root():
     return {"message": "¡Bienvenido a mi API con FastAPI!"}
 
 def edad(fecha_nacimiento):
-    return 20
+    return 21

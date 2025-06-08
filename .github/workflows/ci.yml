@@ -73,8 +73,7 @@ jobs:
           *Repositorio:* `${{ github.repository }}`
           *Pull Request:* `${{ github.event.pull_request.html_url }}`
           *Autor:* `${{ github.actor }}`
+          *Commit:* `${{ github.sha }}`
+          ${{ needs.build.result == 'success' && 'Todas las validaciones han pasado exitosamente.' || format('La build ha fallado. Origen del fallo:', needs.build.outputs.failure_type) }}
           
-          # Mensaje dinámico: Si falla, muestra el error específico. Si tiene éxito, muestra un mensaje de éxito.
-          ${{ needs.build.result == 'success' && 'Todas las validaciones han pasado exitosamente.' || format('La build ha fallado. **Origen del fallo:** {0}', needs.build.outputs.failure_type) }}
-          
-          [Ver logs del workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
