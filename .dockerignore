@@ -56,7 +56,6 @@ docs
 *.log
 
 # Archivos de configuración local
-.flake8
 pytest.ini
 .env.local
 .env.development
