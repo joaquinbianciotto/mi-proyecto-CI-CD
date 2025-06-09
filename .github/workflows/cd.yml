@@ -42,7 +42,7 @@ jobs:
         
         # Guardar URI de la imagen para la notificación
         echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
-        echo "image_uri=IMAGE_URI" >> $GITHUB_OUTPUT
+        echo "image_uri=$IMAGE_URI" >> $GITHUB_OUTPUT
         
 
   Slack-Notification:
@@ -69,6 +69,8 @@ jobs:
           
           ${{ needs.build-and-push-to-ecr.result == 'success' && '✅ La imagen ha sido desplegada con éxito a Amazon ECR.' || '❌ El despliegue de la imagen ha fallado. Revisa los logs para más detalles.' }}
 
-          ${{ needs.build-and-push-to-ecr.result == 'success' && format('Detalles:\n- Imagen: `{0}`\n- Tag: `{1}`', needs.build-and-push-to-ecr.outputs.image_uri, needs.build-and-push-to-ecr.outputs.image_tag) || '' }}
+          ${{ needs.build-and-push-to-ecr.result == 'success' && format('Detalles:
+            - Imagen: `{0}`
+            - Tag: `{1}`', needs.build-and-push-to-ecr.outputs.image_uri, needs.build-and-push-to-ecr.outputs.image_tag) || '' }}
           
-          [Ver logs del workflow](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
