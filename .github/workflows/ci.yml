@@ -14,6 +14,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    outputs:
+      failure_type: ${{ steps.detect_failure.outputs.failure_type }}
     steps:
     - name: Checkout code  
       uses: actions/checkout@v4
@@ -35,31 +37,43 @@ jobs:
       run: |
         echo "Ejecutando linting dentro del contenedor Docker..."
         docker run --rm myapp:latest flake8 app/
-    
+        
+    # Detectar fallos y enviar notificaciones, solo si alguno de los pasos anteriores falla
+    - name: Detectar fallos
+      id: detect_failure
+      if: failure()
+      run: |
+        if [[ ${{ steps.build_docker.outcome }} == 'failure' ]]; then
+          echo "failure_type=🐳 Error al construir la imagen Docker" >> $GITHUB_OUTPUT
+        elif [[ ${{ steps.test_docker.outcome }} == 'failure' ]]; then
+          echo "failure_type=🧪 Error en las pruebas (pytest)" >> $GITHUB_OUTPUT
+        elif [[ ${{ steps.lint_docker.outcome }} == 'failure' ]]; then
+          echo "failure_type=🔍 Error en la verificación de estilo (flake8)" >> $GITHUB_OUTPUT
+        else
+          echo "failure_type=unknown" >> $GITHUB_OUTPUT
+        fi
 
-  slackNotification:
+  notification:
     name: Slack Notification
     runs-on: ubuntu-latest
     needs: build
+    if: always() 
     steps:
-    - uses: actions/checkout@v4
-    - name: Slack Notification
+    - name: Send Slack Notification
       uses: rtCamp/action-slack-notify@v2
       env:
+        # El webhook es un secreto, como lo tienes
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_COLOR: ${{ job.status == 'success' && 'good' || job.status == 'failure' && 'danger' || 'warning' }}
-        SLACK_TITLE: "Estado del CI/CD: ${{ job.status }}"
-        SLACK_USERNAME: CI/CD Bot
+        # El color y el título cambian dinámicamente según el resultado del job 'build'
+        SLACK_COLOR: ${{ needs.build.result == 'success' && 'good' || 'danger' }}
+        SLACK_TITLE: ${{ needs.build.result == 'success' && '✅ CI Pipeline Exitoso' || '❌ CI Pipeline Fallido' }}
+        SLACK_USERNAME: CI Bot
         SLACK_ICON: https://github.com/favicon.ico
-        SLACK_FOOTER: "FastAPI CI/CD Pipeline"
         SLACK_MESSAGE: |
-          *Repositorio:* ${{ github.repository }}
-          *Rama:* ${{ github.ref_name }}
-          *Commit:* ${{ github.event.after || github.sha }}
-          *Autor:* ${{ github.actor }}
-          *Evento:* ${{ github.event_name }}
+          *Repositorio:* `${{ github.repository }}`
+          *Pull Request:* `${{ github.event.pull_request.html_url }}`
+          *Autor:* `${{ github.actor }}`
+          *Commit:* `${{ github.sha }}`
+          ${{ needs.build.result == 'success' && 'Todas las validaciones han pasado exitosamente.' || format('La build ha fallado. Origen del fallo:', needs.build.outputs.failure_type) }}
           
-          Validaciones completadas dentro del contenedor Docker:
-          ✅ Build de imagen Docker
-          ✅ Tests con pytest dentro del contenedor
-          ✅ Lint con flake8 dentro del contenedor
+          https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
