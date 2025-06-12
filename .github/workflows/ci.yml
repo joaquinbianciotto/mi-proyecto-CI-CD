@@ -127,24 +127,30 @@ jobs:
     
     steps:
     - name: Set up SSH Key
+      env:
+        SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+        echo "$SSH_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
     - name: Deploy to EC2
+      env:
+        ECR_PUBLIC_REPOSITORY_URI: ${{ secrets.ECR_PUBLIC_REPOSITORY_URI }}
+        EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        EC2_HOST: ${{ secrets.EC2_HOST }}
       run: |
-        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa $EC2_USERNAME@EC2_HOST << 'EOF'
           set -e
           
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
-          docker pull ${{ secrets.ECR_PUBLIC_REPOSITORY_URI }}:latest
+          docker pull $ECR_PUBLIC_REPOSITORY_URI:latest
           
           docker stop mi-api || true
           docker rm mi-api || true
           
-          docker run -d -p 80:8000 --name mi-api --restart always ${{ secrets.ECR_PUBLIC_REPOSITORY_URI }}:latest
+          docker run -d -p 80:8000 --name mi-api --restart always $ECR_PUBLIC_REPOSITORY_URI:latest
         EOF
 
 
