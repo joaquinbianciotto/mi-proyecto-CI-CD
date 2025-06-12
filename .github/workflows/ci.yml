@@ -140,7 +140,7 @@ jobs:
         EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
         EC2_HOST: ${{ secrets.EC2_HOST }}
       run: |
-        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa $EC2_USERNAME@EC2_HOST << 'EOF'
+        ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa $EC2_USERNAME@$EC2_HOST << 'EOF'
           set -e
           
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
