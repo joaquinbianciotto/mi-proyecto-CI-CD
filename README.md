@@ -26,6 +26,8 @@ Este proyecto implementa un flujo CI/CD completo para una aplicación FastAPI co
 - **AWS EC2 Deploy** - Despliegue automatizado a instancia EC2
 - **Makefile** - Comandos simplificados para desarrollo
 
+![Diagrama CI](utils/diagramaCI.png)
+
 
 ## 🚀 Instalación y Configuración
 
@@ -185,12 +187,6 @@ pytest tests/ --cov=app --cov-report=html
 ### Configuración flake8
 
 Archivo: `.flake8`
-
-```ini
-[flake8]
-extend-ignore = E203, W503
-max-line-length = 88
-```
 
 ### Ejecutar linting
 
