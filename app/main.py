@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from app.routers import items
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 app = FastAPI(
     title="Mi Proyecto CI/CD",

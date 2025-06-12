@@ -20,10 +20,6 @@ docker-test: build
 docker-lint: build
 	docker run --rm $(IMAGE_NAME):latest flake8 app/
 
-## 🧹 Corrige errores de formato (autoformat)
-#docker-format: build
-#	docker run --rm $(IMAGE_NAME):latest flake8 . --fix
-
 ## 🧹 Limpia todo
 clean:
 	docker rmi $(IMAGE_NAME) || true

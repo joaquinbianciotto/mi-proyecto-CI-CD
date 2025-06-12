@@ -1,5 +1,6 @@
 from fastapi.testclient import TestClient
 from app.main import app, edad
+from datetime import date
 
 client = TestClient(app)
 
@@ -10,5 +11,5 @@ def test_read_root():
 
 
 def test_edad():
-    respuesta = edad("24/10/2003")
+    respuesta = edad(date(2003,10,24))
     assert respuesta == 21
