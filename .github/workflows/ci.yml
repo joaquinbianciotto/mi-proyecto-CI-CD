@@ -136,7 +136,6 @@ jobs:
 
     - name: Deploy to EC2
       env:
-        ECR_PUBLIC_REPOSITORY_URI: ${{ secrets.ECR_PUBLIC_REPOSITORY_URI }}
         EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
         EC2_HOST: ${{ secrets.EC2_HOST }}
       run: |
@@ -145,12 +144,12 @@ jobs:
           
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
-          docker pull $ECR_PUBLIC_REPOSITORY_URI:latest
+          docker pull public.ecr.aws/q3l0c1l7/zotito/mi-proyecto-ci-cd:latest:latest
           
           docker stop mi-api || true
           docker rm mi-api || true
           
-          docker run -d -p 80:8000 --name mi-api --restart always $ECR_PUBLIC_REPOSITORY_URI:latest
+          docker run -d -p 80:8000 --name mi-api --restart always public.ecr.aws/q3l0c1l7/zotito/mi-proyecto-ci-cd:latest
         EOF
 
 
