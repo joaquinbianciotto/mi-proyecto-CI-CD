@@ -144,7 +144,7 @@ jobs:
           
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
           
-          docker pull public.ecr.aws/q3l0c1l7/zotito/mi-proyecto-ci-cd:latest:latest
+          docker pull public.ecr.aws/q3l0c1l7/zotito/mi-proyecto-ci-cd:latest
           
           docker stop mi-api || true
           docker rm mi-api || true
