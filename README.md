@@ -26,6 +26,8 @@ Este proyecto implementa un flujo CI/CD completo para una aplicación FastAPI co
 - **AWS EC2 Deploy** - Despliegue automatizado a instancia EC2
 - **Makefile** - Comandos simplificados para desarrollo
 
+![Diagrama CI](utils/diagramaCI.png)
+
 
 ## 🚀 Instalación y Configuración
 
