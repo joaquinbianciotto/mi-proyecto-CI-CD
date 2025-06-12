@@ -188,12 +188,6 @@ pytest tests/ --cov=app --cov-report=html
 
 Archivo: `.flake8`
 
-```ini
-[flake8]
-extend-ignore = E203, W503
-max-line-length = 88
-```
-
 ### Ejecutar linting
 
 ```bash
