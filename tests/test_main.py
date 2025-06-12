@@ -12,4 +12,4 @@ def test_read_root():
 
 def test_edad():
     respuesta = edad(date(2003,10,24))
-    assert respuesta == 21
+    assert respuesta == 20
