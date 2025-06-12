@@ -19,7 +19,7 @@ class Item(BaseModel):
 
 # Base de datos simulada
 items_db = {
-    1: Item(id=1, name="Martillo", description="Herramienta para clavar muchas cosas (cambio)", price=19.99, is_offer=True),
+    1: Item(id=1, name="Martillo", description="Herramienta para clavar mucho", price=19.99, is_offer=True),
     2: Item(id=2, name="Destornillador", description="Herramienta para tornillos", price=9.99, is_offer=False)
 }
 
