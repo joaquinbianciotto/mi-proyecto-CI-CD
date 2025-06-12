@@ -1,6 +1,6 @@
 # Nombre de la imagen para entorno local
-IMAGE_NAME := fastapi-lambda-local
-CONTAINER_NAME := fastapi-lambda-container
+IMAGE_NAME := fastapi-local
+CONTAINER_NAME := fastapi-container
 APP_MODULE := .app.main:app
 
 .PHONY: build docker-test docker-lint docker-shell docker-run clean

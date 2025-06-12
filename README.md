@@ -1,16 +1,15 @@
 
 # 🚀 Mi Proyecto CI/CD con FastAPI
 
-Este proyecto implementa un flujo CI/CD completo para una aplicación FastAPI con Docker, incluyendo testing automatizado, linting, y despliegue a Amazon ECR con notificaciones de Slack.
+Este proyecto implementa un flujo CI/CD completo para una aplicación FastAPI con Docker, incluyendo testing automatizado, linting, despliegue automatizado a Amazon ECR y AWS EC2 con notificaciones de Slack.
 
 ## 📋 Tabla de Contenidos
 
 - [Características](#-características)
 - [Instalación y Configuración](#-instalación-y-configuración)
 - [Build Local con Docker](#-build-local-con-docker)
-- [Workflow de CI](#-workflow-de-cicd)
-- [Configuración de Secretos](#-configuración-de-secretos)
-- [API Endpoints](#-api-endpoints)
+- [Workflow de CI/CD](#-workflow-de-cicd)
+- [Deploy en AWS](#-deploy-en-aws)
 - [Testing](#-testing)
 - [Linting](#-linting)
 - [Contribución](#-contribución)
@@ -24,7 +23,9 @@ Este proyecto implementa un flujo CI/CD completo para una aplicación FastAPI co
 - **Linting** - Verificación de calidad de código con flake8
 - **Notificaciones Slack** - Alertas automáticas de build y despliegue
 - **Amazon ECR** - Registro de contenedores para despliegue
+- **AWS EC2 Deploy** - Despliegue automatizado a instancia EC2
 - **Makefile** - Comandos simplificados para desarrollo
+
 
 ## 🚀 Instalación y Configuración
 
@@ -49,8 +50,6 @@ venv\Scripts\activate     # En Windows
 ```bash
 pip install -r requirements.txt
 ```
-
-## 💻 Desarrollo Local
 
 ## 🐳 Build Local con Docker
 
@@ -81,9 +80,9 @@ docker run --rm mi-fastapi-app:latest flake8 app/
 docker run -it --rm mi-fastapi-app:latest sh
 ```
 
-## 🔄 Workflow de CI
+## 🔄 Workflow de CI/CD
 
-### Pipeline de CI (Integración Continua)
+### Pipeline de CI/CD (Integración y Despliegue Continuo)
 
 **Archivo**: `.github/workflows/ci.yml`
 
@@ -97,7 +96,7 @@ docker run -it --rm mi-fastapi-app:latest sh
    - ✅ Ejecuta linting con flake8
    - ✅ Detecta tipo de fallo específico
 
-2. **Slack Notification**
+2. **Build Notification**
    - 📢 Notifica resultado del CI a Slack
    - 🎯 Identifica tipo específico de error si falla
 
@@ -106,8 +105,32 @@ docker run -it --rm mi-fastapi-app:latest sh
    - 📤 Sube a Amazon ECR con tags SHA y latest
    - ⚠️ Solo se ejecuta si el CI pasa
 
-4. **Deployment Notification**
+4. **Deploy to EC2**
+   - 🚀 Despliega automáticamente a instancia EC2
+   - 🔄 Actualiza el contenedor con la nueva imagen
+   - 🌐 Configura proxy reverso en puerto 80
+
+5. **Deployment Notification**
    - 📢 Notifica resultado del despliegue a Slack
+   - 🔗 Incluye URL de la aplicación desplegada
+
+## 🚀 Deploy en AWS
+
+### Arquitectura de Despliegue
+
+El proyecto utiliza una arquitectura de contenedores en AWS con los siguientes componentes:
+
+- **Amazon ECR**: Registro de contenedores para almacenar las imágenes Docker
+- **AWS EC2**: Instancia para ejecutar la aplicación containerizada
+- **GitHub Actions**: Orquestación del pipeline CI/CD
+
+
+### URL de la Aplicación
+
+Una vez desplegada, la aplicación está disponible en:
+- **Aplicación**: http://18.228.193.11/
+- **Documentación API**: http://18.228.193.11/docs
+- **Documentación alternativa**: http://18.228.193.11/redoc
 
 ### Estados de Notificación
 
@@ -118,10 +141,9 @@ docker run -it --rm mi-fastapi-app:latest sh
   - 🧪 Error en las pruebas (pytest)
   - 🔍 Error en la verificación de estilo (flake8)
 
-#### ECR Pipeline
-- ✅ **Éxito**: "Despliegue Exitoso a ECR"
+#### Deploy Pipeline
+- ✅ **Éxito**: "Despliegue Exitoso a EC2"
 - ❌ **Fallo**: "Despliegue Fallido"
-
 
 
 ## 🧪 Testing
@@ -182,26 +204,4 @@ docker run --rm mi-fastapi-app:latest flake8 app/
 # Con Makefile
 make docker-lint
 ```
-
-
-## 📊 Optimizaciones Docker
-
-El proyecto utiliza un **Dockerfile multi-stage** optimizado:
-
-### Características:
-- 🏔️ **Base Alpine Linux** - Imagen más pequeña
-- 👥 **Usuario no-root** - Mayor seguridad
-- 🗂️ **Multi-stage build** - Separación build/runtime
-- 📦 **Cache de dependencias** - Builds más rápidos
-
-### Tamaño optimizado:
-- Imagen final ~100MB 
-- Build time reducido con cache de layers
-- Security scanning mejorado
-
----
-
-## 📝 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
