@@ -1,3 +1,4 @@
+
 # 🚀 Mi Proyecto CI/CD con FastAPI
 
 Este proyecto implementa un flujo CI/CD completo para una aplicación FastAPI con Docker, incluyendo testing automatizado, linting, y despliegue a Amazon ECR con notificaciones de Slack.
@@ -203,3 +204,4 @@ El proyecto utiliza un **Dockerfile multi-stage** optimizado:
 ## 📝 Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
